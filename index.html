@@ -1,0 +1,206 @@
+[index.html](https://github.com/user-attachments/files/33687409/index.html)
+# calculadora-empleada-domestica
+Calculadora del costo de una empleada doméstica en Argentina: sueldo según categoría y horas, antigüedad, cuota de ARCA y aguinaldo, por mes y por año. Escala de octubre de 2026 (Res. CNTCP 6/2026). Gratis, sin registro, HTML, CSS y JavaScript puro. Resultados orientativos, no reemplaza a un contador.
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculadora de costo de empleada doméstica 2026 (sueldo, aportes y aguinaldo)</title>
+<meta name="description" content="Calculá cuánto cuesta por mes y por año una empleada doméstica en Argentina: sueldo según categoría, antigüedad, cuota de ARCA y aguinaldo. Escala de octubre de 2026.">
+<link rel="canonical" href="https://calculadoradeaguinaldo.netlify.app/calculadora-empleada-domestica/">
+<meta property="og:title" content="Calculadora de costo de empleada doméstica 2026">
+<meta property="og:description" content="Sueldo, antigüedad, aportes a ARCA y aguinaldo. Gratis y sin registro.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;600;800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Quién paga los aportes de una empleada doméstica?","acceptedAnswer":{"@type":"Answer","text":"El empleador ingresa todos los meses a ARCA una cuota única que incluye obra social, jubilación y ART. El importe depende de las horas semanales trabajadas."}},
+{"@type":"Question","name":"¿Cómo se calcula el aguinaldo de una empleada doméstica?","acceptedAnswer":{"@type":"Answer","text":"Es el 50% de la mayor remuneración mensual del semestre y se paga hasta el 30 de junio y hasta el 18 de diciembre."}},
+{"@type":"Question","name":"¿Cuántos días de vacaciones le corresponden?","acceptedAnswer":{"@type":"Answer","text":"14 días corridos con hasta 5 años de antigüedad, 21 de 5 a 10 años, 28 de 10 a 20 años y 35 con más de 20 años."}},
+{"@type":"Question","name":"¿Cuánto suma la antigüedad?","acceptedAnswer":{"@type":"Answer","text":"Se agrega el 1% del sueldo mínimo de la categoría por cada año de antigüedad."}}
+]}
+</script>
+<style>
+:root{--fondo:#EAF1F5;--papel:#fff;--tinta:#18222D;--tinta2:#4A5866;--celeste:#1B6CA8;--sol:#F6B93B;--linea:#CBD7E0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--tinta);font:17px/1.7 "Source Serif 4",Georgia,serif}
+h1,h2,label,button,.ui,summary{font-family:"Schibsted Grotesk",system-ui,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header{padding:28px 0 8px}
+.marca{font:600 .95rem "Schibsted Grotesk",system-ui,sans-serif;color:var(--celeste)}
+h1{font-size:clamp(2rem,6vw,3.5rem);line-height:1.05;letter-spacing:-.02em;font-weight:800;margin:14px 0 10px;max-width:16ch}
+.sub{margin:0 0 28px;color:var(--tinta2);max-width:56ch}
+.calc{display:grid;gap:24px;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);align-items:start}
+@media(max-width:820px){.calc{grid-template-columns:minmax(0,1fr)}}
+.form{background:var(--papel);border:1px solid var(--linea);border-radius:14px;padding:24px}
+.campo{margin-bottom:18px}
+label{display:block;font-weight:600;font-size:.98rem;margin-bottom:6px}
+.ayuda{display:block;font:400 .88rem/1.4 "Source Serif 4",Georgia,serif;color:var(--tinta2);margin-top:5px}
+input,select{width:100%;font:inherit;font-size:1rem;font-family:"Schibsted Grotesk",system-ui,sans-serif;padding:12px;border:1.5px solid #9FB3C3;border-radius:8px;background:#fff;color:var(--tinta)}
+input:focus-visible,select:focus-visible,summary:focus-visible,.chk input:focus-visible{outline:3px solid var(--celeste);outline-offset:2px}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chk{display:flex;gap:10px;align-items:center;font-weight:400;cursor:pointer}
+.chk input{width:20px;height:20px;margin:0;accent-color:var(--celeste)}
+#fechas{display:none;margin-top:14px}
+#fechas.on{display:block}
+.recibo{position:relative;background:var(--papel);padding:24px 24px 28px;border-radius:4px 4px 0 0;margin-bottom:18px;box-shadow:0 1px 0 var(--linea)}
+.recibo::after{content:"";position:absolute;left:0;right:0;bottom:-14px;height:14px;background:linear-gradient(135deg,var(--papel) 25%,transparent 25%) 0 0/14px 14px,linear-gradient(225deg,var(--papel) 25%,transparent 25%) 0 0/14px 14px}
+.recibo h2{font-size:1.1rem;margin:0 0 12px;font-weight:800}
+.fila{display:grid;grid-template-columns:minmax(0,1fr) 7.2rem 6.2rem;gap:4px 12px;padding:8px 0;border-bottom:1px dashed var(--linea);font:400 .93rem/1.35 "Schibsted Grotesk",system-ui,sans-serif}
+.fila.cab{color:var(--tinta2);font-size:.82rem;border-bottom:1.5px solid var(--tinta)}
+.fila span:nth-child(n+2){text-align:right;font-variant-numeric:tabular-nums}
+.fila.paso{color:var(--tinta2)}
+.fila.fuerte{font-weight:600}
+.neto{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;background:var(--sol);border-radius:6px;padding:14px 16px;margin-top:16px;font-family:"Schibsted Grotesk",system-ui,sans-serif}
+.neto b{font-size:clamp(1.5rem,5vw,2rem);font-weight:800;font-variant-numeric:tabular-nums}
+.nota{font-size:.9rem;color:var(--tinta2);margin:14px 0 0}
+.err{color:#A12B2B;font:600 .92rem "Schibsted Grotesk",system-ui,sans-serif;margin:8px 0 0}
+.donar{margin-top:28px;background:var(--papel);border:1px solid var(--linea);border-radius:14px;padding:24px;text-align:center}
+.donar[hidden]{display:none}
+.donar h2{font-size:1.35rem;margin:0 0 6px;font-weight:800;letter-spacing:-.01em}
+.donar p{margin:0 auto 18px;max-width:52ch;color:var(--tinta2)}
+.montos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media(max-width:620px){.montos{grid-template-columns:minmax(0,1fr)}}
+.monto{position:relative;display:block;text-decoration:none;color:var(--tinta);background:#fff;border:1.5px solid #9FB3C3;border-radius:10px;padding:14px 10px;font-family:"Schibsted Grotesk",system-ui,sans-serif}
+.monto b{display:block;font-size:1.05rem}
+.monto span{font-size:.9rem;color:var(--tinta2)}
+.monto:hover{border-color:var(--celeste)}
+.monto:focus-visible{outline:3px solid var(--celeste);outline-offset:2px}
+.monto.top{background:var(--sol);border-color:var(--sol)}
+.monto.top span{color:var(--tinta)}
+.monto i{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--tinta);color:#fff;font:600 .75rem "Schibsted Grotesk",system-ui,sans-serif;font-style:normal;padding:2px 10px;border-radius:99px;white-space:nowrap}
+.donar small{display:block;margin-top:16px;color:var(--tinta2);font:400 .85rem "Schibsted Grotesk",system-ui,sans-serif}
+.anuncio{margin:36px 0;min-height:90px}
+article{max-width:68ch;padding:8px 0 24px}
+article h2{font-size:1.5rem;letter-spacing:-.01em;margin:36px 0 8px}
+details{border-top:1px solid var(--linea);padding:12px 0}
+summary{font-weight:600;cursor:pointer}
+details p{margin:8px 0 0}
+footer{border-top:1px solid var(--linea);padding:20px 0 40px;color:var(--tinta2);font-size:.9rem}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+.fila{grid-template-columns:minmax(0,1fr) 7.2rem 8rem}
+@media(max-width:520px){.fila{grid-template-columns:minmax(0,1fr) 5.8rem 6.6rem;font-size:.84rem}}
+.marca a{color:inherit;text-decoration:none}
+footer a{color:var(--celeste)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="marca"><a href="/">Calculadoras argentinas</a></div>
+  <h1>Costo de una empleada doméstica 2026</h1>
+  <p class="sub">Elegí la categoría y las horas, y mirá cuánto te cuesta por mes y por año: sueldo, antigüedad, cuota de ARCA y aguinaldo.</p>
+</header>
+<main>
+<section class="calc" aria-label="Calculadora">
+  <div class="form">
+    <div class="campo"><label for="cat">Categoría</label>
+      <select id="cat"></select></div>
+    <div class="campo"><label for="mod">Forma de pago</label>
+      <select id="mod"><option value="hora">Por hora (menos de jornada completa)</option><option value="mes">Mensualizado (jornada completa)</option></select></div>
+    <div class="dos campo">
+      <div><label for="horas">Horas por semana</label><input id="horas" type="number" inputmode="numeric" min="1" max="48" value="24"></div>
+      <div><label for="anios">Años de antigüedad</label><input id="anios" type="number" inputmode="numeric" min="0" max="60" value="0"></div>
+    </div>
+    <div class="campo"><label for="arca">Cuota mensual a ARCA ($)</label>
+      <input id="arca" type="text" inputmode="decimal" autocomplete="off">
+      <span class="ayuda" id="arcaayuda"></span></div>
+  </div>
+  <div>
+    <div class="recibo" aria-live="polite">
+      <h2>Cuánto te cuesta</h2>
+      <div class="fila cab"><span>Concepto</span><span>Por mes</span><span>Por año</span></div>
+      <div class="fila"><span>Sueldo básico</span><span id="a1"></span><span id="b1"></span></div>
+      <div class="fila"><span id="lant">Antigüedad</span><span id="a2"></span><span id="b2"></span></div>
+      <div class="fila"><span>Cuota ARCA (obra social, jubilación y ART)</span><span id="a3"></span><span id="b3"></span></div>
+      <div class="fila"><span>Aguinaldo (1/12 por mes)</span><span id="a4"></span><span id="b4"></span></div>
+      <div class="neto"><span>Costo total por mes</span><b id="tot"></b></div>
+      <p class="nota" id="anual"></p>
+      <p class="nota" id="vac"></p>
+    </div>
+  </div>
+</section>
+
+<section class="donar" id="donar" aria-labelledby="donar-t">
+  <h2 id="donar-t">Este cálculo es gratis. ¿Nos invitás un café?</h2>
+  <p>Mantener las calculadoras al día lleva muchas horas por mes. Con tu aporte seguimos siendo gratis y sin paywall.</p>
+  <div class="montos">
+    <a class="monto" href="https://mpago.li/13ZnUsm" target="_blank" rel="noopener">☕ <b>Un café</b><span>$3.000</span></a>
+    <a class="monto top" href="https://mpago.li/1pMdWqL" target="_blank" rel="noopener"><i>Más elegido</i>🍕 <b>Una pizza</b><span>$7.000</span></a>
+    <a class="monto" href="https://mpago.li/1kNpAxM" target="_blank" rel="noopener">💪 <b>Bancanos un mes</b><span>$15.000</span></a>
+  </div>
+  <small>Pagás con tarjeta, transferencia o dinero en cuenta de Mercado Pago.</small>
+</section>
+
+<div class="anuncio" aria-hidden="true"></div>
+
+<article>
+  <h2>Qué incluye el costo de una empleada doméstica</h2>
+  <p>Tener personal de casas particulares en blanco tiene cuatro componentes: el sueldo que fija la Comisión Nacional de Trabajo en Casas Particulares, el adicional por antigüedad, la cuota mensual de ARCA y el aguinaldo. Esta calculadora los suma y te muestra el costo real por mes y por año.</p>
+  <h2>El sueldo según categoría y horas</h2>
+  <p>La escala distingue cinco categorías: supervisor/a, tareas específicas, caseros, asistencia y cuidado de personas, y tareas generales. Cada una tiene un valor hora y un valor mensual, con retiro o sin retiro. Si la persona trabaja menos de jornada completa, se paga por hora: horas por semana, por el valor hora, por 4,33 semanas al mes.</p>
+  <h2>Antigüedad</h2>
+  <p>Por cada año de antigüedad se suma el 1% del sueldo mínimo de la categoría. Con 5 años, por ejemplo, el básico sube un 5%.</p>
+  <h2>La cuota de ARCA</h2>
+  <p>Todos los meses el empleador paga a ARCA un importe único por cada trabajadora, que incluye la obra social, los aportes jubilatorios y la ART. El monto no es un porcentaje del sueldo: depende de las horas semanales (menos de 12, de 12 a menos de 16, o 16 o más) y se actualiza todos los meses por el componente de la ART. Verificá siempre el importe vigente en el micrositio de Casas Particulares de ARCA.</p>
+  <h2>Aguinaldo y vacaciones</h2>
+  <p>El aguinaldo equivale al 50% de la mejor remuneración del semestre, así que conviene reservar un doceavo del sueldo todos los meses. Las vacaciones son 14 días corridos hasta los 5 años de antigüedad, 21 hasta los 10, 28 hasta los 20 y 35 después. Son días pagos y forman parte del sueldo normal, por lo que no suman un costo extra.</p>
+  <h2>Preguntas frecuentes</h2>
+  <details><summary>¿Quién paga los aportes de una empleada doméstica?</summary><p>El empleador ingresa todos los meses a ARCA una cuota única que incluye obra social, jubilación y ART. El importe depende de las horas semanales trabajadas.</p></details>
+  <details><summary>¿Cómo se calcula el aguinaldo de una empleada doméstica?</summary><p>Es el 50% de la mayor remuneración mensual del semestre y se paga hasta el 30 de junio y hasta el 18 de diciembre.</p></details>
+  <details><summary>¿Cuántos días de vacaciones le corresponden?</summary><p>14 días corridos con hasta 5 años de antigüedad, 21 de 5 a 10 años, 28 de 10 a 20 años y 35 con más de 20 años.</p></details>
+  <details><summary>¿Cuánto suma la antigüedad?</summary><p>Se agrega el 1% del sueldo mínimo de la categoría por cada año de antigüedad.</p></details>
+</article>
+</main>
+<footer>
+  <p>Los resultados son orientativos y no reemplazan el asesoramiento de un contador. No incluyen otros adicionales (zona, título) ni menores de 18 o jubilados. Escala: Resolución CNTCP 6/2026, octubre de 2026. Cuota ARCA: período septiembre de 2026. Actualizado: octubre de 2026. Ver también la <a href="/">calculadora de aguinaldo</a>.</p>
+</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const m0=n=>n.toLocaleString('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0});
+// ACTUALIZAR CADA MES: [nombre, valor hora, valor mensual jornada completa] (Resolución CNTCP 6/2026)
+const ESC={tg_cr:['Tareas generales, con retiro',4064.08,498582.06],tg_sr:['Tareas generales, sin retiro',4337.53,548429.23],
+ac_cr:['Asistencia y cuidado de personas, con retiro',4337.53,548429.23],ac_sr:['Asistencia y cuidado de personas, sin retiro',4801.52,605050],
+te_cr:['Tareas específicas, con retiro',4580.80,560776.33],te_sr:['Tareas específicas, sin retiro',4973.38,618187.89],
+su_cr:['Supervisor/a, con retiro',4805.82,599514.52],su_sr:['Supervisor/a, sin retiro',5215.59,661702.46],
+ca_sr:['Caseros, sin retiro',4337.53,548429.23]};
+// ACTUALIZAR: cuota ARCA total (período septiembre 2026). El tramo de 12 a menos de 16 horas se carga a mano.
+const ARCA={menos12:10569.57,mas16:44270.19};
+$('cat').innerHTML=Object.entries(ESC).map(([k,v])=>'<option value="'+k+'">'+v[0]+'</option>').join('');
+const parse=s=>{s=(s||'').replace(/[^\d.,]/g,'');if(!s)return NaN;if(s.includes(','))s=s.replace(/\./g,'').replace(',','.');else if(/^\d{1,3}(\.\d{3})+$/.test(s))s=s.replace(/\./g,'');return parseFloat(s)};
+const vac=a=>a>20?35:a>10?28:a>5?21:14;
+let tocado=false;
+function autoArca(){
+  if(tocado)return;
+  const h=+$('horas').value||0;
+  const v=h>=16?ARCA.mas16:h<12?ARCA.menos12:null;
+  $('arca').value=v?v.toLocaleString('es-AR',{minimumFractionDigits:2}):'';
+  $('arcaayuda').textContent=v?'Importe de ARCA según las horas semanales. Podés editarlo.':'Para 12 a menos de 16 horas, ingresá el importe del micrositio de Casas Particulares de ARCA.';
+}
+function calcular(){
+  const c=ESC[$('cat').value],mes=$('mod').value==='mes';
+  const hs=+$('horas').value||0,an=Math.max(0,Math.floor(+$('anios').value||0));
+  const basico=mes?c[2]:c[1]*hs*13/3,ant=basico*.01*an,sueldo=basico+ant;
+  const arca=parse($('arca').value)||0,agui=sueldo/12,tot=sueldo+arca+agui;
+  $('lant').textContent='Antigüedad ('+an+(an===1?' año, ':' años, ')+an+'%)';
+  const f=(a,b,v)=>{$(a).textContent=m0(v);$(b).textContent=m0(v*12)};
+  f('a1','b1',basico);f('a2','b2',ant);f('a3','b3',arca);
+  $('a4').textContent=m0(agui);$('b4').textContent=m0(sueldo);
+  $('tot').textContent=m0(tot);
+  $('anual').textContent='Por año: '+m0(sueldo*12+arca*12+sueldo)+' (12 sueldos, 12 cuotas de ARCA y 2 medios aguinaldos).';
+  const d=vac(an);
+  $('vac').textContent='Vacaciones: '+d+' días corridos pagos, unos '+m0(sueldo/25*d)+' (sueldo ÷ 25 × días). Van dentro del sueldo normal, no suman costo.';
+}
+$('mod').addEventListener('change',()=>{const mes=$('mod').value==='mes';$('horas').value=mes?48:24;$('horas').disabled=mes;autoArca();calcular()});
+$('horas').addEventListener('input',()=>{autoArca();calcular()});
+['cat','anios','arca'].forEach(i=>$(i).addEventListener('input',()=>{if(i==='arca')tocado=true;calcular()}));
+$('arca').addEventListener('input',()=>{if(!$('arca').value)tocado=false});
+autoArca();calcular();
+</script>
+</body>
+</html>
